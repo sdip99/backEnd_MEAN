@@ -1,6 +1,13 @@
 var express = require('express');
+var mongoose = require('mongoose');
+var Message = mongoose.model('Message',{
+    msg: String
+});
+
+
 var app = express();
 var bodyParser = require('body-parser');
+
 
 app.use(bodyParser.json());
 app.use(function(req,resp,next){
@@ -9,10 +16,25 @@ app.use(function(req,resp,next){
     next();
 });
 
+mongoose.connect('mongodb://localhost:27017/test', function(err, db){
+    if(!err){
+        console.log('Connected!!');
+        getMessages();
+    }
+});
 app.post('/api/message', function(req,resp){
     console.log(req.body);
+    var message = new Message(req.body);
+    message.save();
     resp.status(200);
+    
 });
+
+function getMessages(){
+    Message.find({}).exec(function(err, results){
+        console.log(results);
+    });
+}
 var server = app.listen(5000, function(){
     console.log("listening on port", server.address().port);
 });
