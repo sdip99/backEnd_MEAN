@@ -19,9 +19,11 @@ app.use(function(req,resp,next){
 mongoose.connect('mongodb://localhost:27017/test', function(err, db){
     if(!err){
         console.log('Connected!!');
-        getMessages();
+        
     }
 });
+
+app.get('/api/message', getMessages)
 app.post('/api/message', function(req,resp){
     console.log(req.body);
     var message = new Message(req.body);
@@ -30,9 +32,10 @@ app.post('/api/message', function(req,resp){
     
 });
 
-function getMessages(){
+function getMessages(req,resp){
     Message.find({}).exec(function(err, results){
         console.log(results);
+        resp.send(results);
     });
 }
 var server = app.listen(5000, function(){
