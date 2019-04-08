@@ -17,8 +17,20 @@ module.exports = {
                 });
             }   
         });
+    },
+
+    login : function(req,resp){
+        User.findOne({email: req.body.email}, function(err, user){
+            if(!user){
+                return resp.status(409).send({message: "Email or Password is invalid"});
+            }
+            if(req.body.pwd == User.pwd)
+                return resp.send({token: createToken(results)});
+            else
+                return resp.status(401).send({message: "Email or Password is invalid"});
+        });
     }
-}
+},
 
 function createToken(userDetail){
     var payload = {
