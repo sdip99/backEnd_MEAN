@@ -25,12 +25,12 @@ module.exports = {
                 return resp.status(409).send({message: "Email or Password is invalid"});
             }
             if(req.body.pwd == User.pwd)
-                return resp.send({token: createToken(results)});
+                return resp.send({token: createToken(user)});
             else
                 return resp.status(401).send({message: "Email or Password is invalid"});
         });
     }
-},
+}
 
 function createToken(userDetail){
     var payload = {
